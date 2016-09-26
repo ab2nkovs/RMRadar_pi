@@ -1,6 +1,9 @@
 
-BR24radar_pi - Navico Broadband Radar Plugin for OpenCPN
+RMradar_pi - Raymarine Digital Radar Plugin for OpenCPN
 ========================================================
+
+Should work with digital radars like RD424D and analog radars connected to E-series classic MFDs. Most of the code is taken from BR24Radar_pi project.
+
 
 Downloads
 ---------

@@ -8,12 +8,6 @@ Plugin has only been tested on Linux platform. If you want to give it a try, set
 
 If there is no MFD on the network, radar control will need to be enabled in the plugin settings. If you do it, you are on your own, this software does not come with guarantees of any kind.
 
-Downloads
----------
-
-The latest binary version for Microsoft Windows and OS X can be downloaded at https://github.com/canboat/BR24radar_pi/releases .
-Ubuntu/Debian can install the standard opencpn PPA and install 'opencpn-plugin-br24radar'.
-
 Compiling
 ---------
 
@@ -27,10 +21,12 @@ In order to build multiple platforms you can build in separate `build-${platform
 ###Obtain the source code
 
 ```
-git clone https://github.com/canboat/BR24radar_pi.git
+git clone https://github.com/ab2nkovs/RMRadar_pi.git
 ```
 
 ###Build on Microsoft Windows
+
+-- not tested, probably will not work
 
 ```
 mkdir BR24radar_pi/build-win32
@@ -43,6 +39,9 @@ Windows note: You must place opencpn.lib into your build directory to be able to
 ###Creating a package on Microsoft Windows
 
 Windows
+
+-- not tested, probably will not work
+
 ```
 cmake --build . --config release --target package
 ```
@@ -52,8 +51,8 @@ cmake --build . --config release --target package
 Example on 64 bit Intel/AMD64 system:
 
 ```
-mkdir BR24radar_pi/build-linux-x86_64
-cd BR24radar_pi/build-linux-x86_64
+mkdir RMRadar_pi/build-linux-x86_64
+cd RMRadar_pi/build-linux-x86_64
 cmake ..
 make
 ```
@@ -66,6 +65,8 @@ make package
 ```
 
 ###Build on Mac OS X:
+
+-- not tested, probably will not work
 
 XCode can be downloaded from the App Store.
 

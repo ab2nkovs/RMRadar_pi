@@ -2,8 +2,11 @@
 RMradar_pi - Raymarine Digital Radar Plugin for OpenCPN
 ========================================================
 
-Should work with digital radars like RD424D and analog radars connected to E-series classic MFDs. Most of the code is taken from BR24Radar_pi project.
+Should work with digital radars like RD424D and analog radars connected to E-series classic MFDs. Most of the code is taken from BR24Radar_pi project and so is the text below.
 
+Plugin has only been tested on Linux platform. If you want to give it a try, set your LAN IP to your choice of 10.X.X.X/8, connect RDXXXD radar or E-series MFD. Plugin can run in the passive mode and display radar picture while MFD is controlling the radar.
+
+If there is no MFD on the network, radar control will need to be enabled in the plugin settings. If you do it, you are on your own, this software does not come with guarantees of any kind.
 
 Downloads
 ---------

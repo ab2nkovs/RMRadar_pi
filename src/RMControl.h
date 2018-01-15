@@ -78,7 +78,7 @@ class CControlItem {
 	void SetMin(int min) { m_min.Set(min); }
 	void SetMax(int max) { m_max.Set(max); }
 	bool IsActive() const { if(!m_value.IsSet()) throw value_not_set(); return m_active; }
-	bool SetActive(bool active) { m_active = active; }
+	bool SetActive(bool active) { m_active = active; return m_active; }
 	const CValue & Min() const { return m_min; }
 	const CValue & Max() const { return m_max; }
 };

@@ -32,8 +32,8 @@
  */
 
 #include "RMControl.h"
-#include <netinet/in.h>
-#include <arpa/inet.h>
+// #include <netinet/in.h>
+// #include <arpa/inet.h>
 
 PLUGIN_BEGIN_NAMESPACE
 
@@ -1057,7 +1057,7 @@ static uint8_t rd_msg_1s[] = {
 
 void CRMControl::Send1sKeepalive()
 {
-	sendto(m_dataSocket, rd_msg_1s, sizeof(rd_msg_1s), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_1s, sizeof(rd_msg_1s), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 
@@ -1069,7 +1069,7 @@ static uint8_t rd_msg_5s[] = {
 
 void CRMControl::Send5sKeepalive()
 {
-	sendto(m_dataSocket, rd_msg_5s, sizeof(rd_msg_5s), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_5s, sizeof(rd_msg_5s), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 static uint8_t rd_msg_once[] = {
@@ -1101,12 +1101,12 @@ void CRMControl::WakeupRadar()
 
 	for(int i = 0; i < 10; i++)
 	{
-		int res = sendto(outSD, wakeup_msg, 16, 0, (struct sockaddr*)&groupSock, sizeof(groupSock));
+		int res = sendto(outSD, (const char *)wakeup_msg, 16, 0, (struct sockaddr*)&groupSock, sizeof(groupSock));
 		if(res < 0)
 		{
 			perror("send_revive, dying 1");
 		}
-		usleep(10000);
+		Sleep(10);
 	}
 
 	close(outSD);
@@ -1116,7 +1116,7 @@ void CRMControl::SendInitMessages()
 {
 	Send1sKeepalive();
 	Send5sKeepalive();
-	int rv = sendto(m_dataSocket, rd_msg_once, sizeof(rd_msg_once), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	int rv = sendto(m_dataSocket, (const char *)rd_msg_once, sizeof(rd_msg_once), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 	perror("SendInitMessages");
 }
 
@@ -1246,31 +1246,31 @@ static uint8_t rd_msg_curve_select[] = {
 void CRMControl::SetGain(uint8_t value)
 {
 	rd_msg_set_gain[20] = value;
-	sendto(m_dataSocket, rd_msg_set_gain, sizeof(rd_msg_set_gain), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_gain, sizeof(rd_msg_set_gain), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetAutoGain(bool enable)
 {
 	rd_msg_set_gain_auto[16] = enable ? 1 : 0;
-	sendto(m_dataSocket, rd_msg_set_gain_auto, sizeof(rd_msg_set_gain_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_gain_auto, sizeof(rd_msg_set_gain_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetTune(uint8_t value)
 {
 	rd_msg_tune_fine[16] = value;
-	sendto(m_dataSocket, rd_msg_tune_fine, sizeof(rd_msg_tune_fine), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_tune_fine, sizeof(rd_msg_tune_fine), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetAutoTune(bool enable)
 {
 	rd_msg_tune_auto[12] = enable ? 1 : 0;
-	sendto(m_dataSocket, rd_msg_tune_auto, sizeof(rd_msg_tune_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_tune_auto, sizeof(rd_msg_tune_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetCoarseTune(uint8_t value)
 {
 	rd_msg_tune_coarse[4] = value;
-	sendto(m_dataSocket, rd_msg_tune_coarse, sizeof(rd_msg_tune_coarse), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_tune_coarse, sizeof(rd_msg_tune_coarse), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::EnableTX(bool enabled)
@@ -1278,7 +1278,7 @@ void CRMControl::EnableTX(bool enabled)
 	if(m_haveRadar && m_pi->m_settings.enable_transmit)
 	{
 		rd_msg_tx_control[4] = enabled ? 1 : 0;
-		sendto(m_dataSocket, rd_msg_tx_control, sizeof(rd_msg_tx_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+		sendto(m_dataSocket, (const char *)rd_msg_tx_control, sizeof(rd_msg_tx_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 	}
 }
 
@@ -1287,62 +1287,62 @@ void CRMControl::TurnOff()
 	if(m_haveRadar && m_pi->m_settings.enable_transmit)
 	{
 		rd_msg_tx_control[4] = 3;
-		sendto(m_dataSocket, rd_msg_tx_control, sizeof(rd_msg_tx_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+		sendto(m_dataSocket, (const char *)rd_msg_tx_control, sizeof(rd_msg_tx_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 	}
 }
 
 void CRMControl::SetRange(uint8_t range_idx)
 {
 	rd_msg_set_range[8] = range_idx;
-	sendto(m_dataSocket, rd_msg_set_range, sizeof(rd_msg_set_range), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_range, sizeof(rd_msg_set_range), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetSTCPreset(uint8_t value)
 {
 	rd_msg_set_stc_preset[8] = value;
-	sendto(m_dataSocket, rd_msg_set_stc_preset, sizeof(rd_msg_set_stc_preset), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_stc_preset, sizeof(rd_msg_set_stc_preset), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetFTC(uint8_t value)
 {
 	rd_msg_ftc_set[20] = value;
-	sendto(m_dataSocket, rd_msg_ftc_set, sizeof(rd_msg_ftc_set), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_ftc_set, sizeof(rd_msg_ftc_set), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetFTCEnabled(bool enable)
 {
 	rd_msg_ftc_on[16] = enable ? 1 : 0;
-	sendto(m_dataSocket, rd_msg_ftc_on, sizeof(rd_msg_ftc_on), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_ftc_on, sizeof(rd_msg_ftc_on), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetRain(uint8_t value)
 {
 	rd_msg_rain_set[20] = value;
-	sendto(m_dataSocket, rd_msg_rain_set, sizeof(rd_msg_rain_set), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_rain_set, sizeof(rd_msg_rain_set), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetRainEnabled(bool enable)
 {
 	rd_msg_rain_on[16] = enable ? 1 : 0;
-	sendto(m_dataSocket, rd_msg_rain_on, sizeof(rd_msg_rain_on), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_rain_on, sizeof(rd_msg_rain_on), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetSea(uint8_t value)
 {
 	rd_msg_set_sea[20] = value;
-	sendto(m_dataSocket, rd_msg_set_sea, sizeof(rd_msg_set_sea), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_sea, sizeof(rd_msg_set_sea), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetAutoSea(uint8_t value)
 {
 	rd_msg_sea_auto[16] = value;
-	sendto(m_dataSocket, rd_msg_sea_auto, sizeof(rd_msg_sea_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_sea_auto, sizeof(rd_msg_sea_auto), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetDisplayTiming(uint8_t value)
 {
 	rd_msg_set_display_timing[8] = value;
-	sendto(m_dataSocket, rd_msg_set_display_timing, sizeof(rd_msg_set_display_timing), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_set_display_timing, sizeof(rd_msg_set_display_timing), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetBearingOffset(int32_t value)
@@ -1351,19 +1351,19 @@ void CRMControl::SetBearingOffset(int32_t value)
 	rd_msg_bearing_offset[5] = (value >> 8) & 0xff;
 	rd_msg_bearing_offset[6] = (value >> 16) & 0xff;
 	rd_msg_bearing_offset[7] = (value >> 24) & 0xff;
-	sendto(m_dataSocket, rd_msg_bearing_offset, sizeof(rd_msg_bearing_offset), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_bearing_offset, sizeof(rd_msg_bearing_offset), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::SetSeaClutterCurve(uint8_t id)
 {
 	rd_msg_curve_select[4] = curve_values[id - 1];
-	sendto(m_dataSocket, rd_msg_curve_select, sizeof(rd_msg_curve_select), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_curve_select, sizeof(rd_msg_curve_select), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 void CRMControl::EnableMBS(bool enable)
 {
 	rd_msg_mbs_control[16] = enable ? 1 : 0;
-	sendto(m_dataSocket, rd_msg_mbs_control, sizeof(rd_msg_mbs_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+	sendto(m_dataSocket, (const char *)rd_msg_mbs_control, sizeof(rd_msg_mbs_control), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 }
 
 bool CRMControl::SetInterferenceRejection(uint8_t value)
@@ -1371,7 +1371,7 @@ bool CRMControl::SetInterferenceRejection(uint8_t value)
 	if(value >= 0 && value <= 2)
 	{
 		rd_msg_interference_rejection[4] = value;
-		sendto(m_dataSocket, rd_msg_interference_rejection, sizeof(rd_msg_interference_rejection), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+		sendto(m_dataSocket, (const char *)rd_msg_interference_rejection, sizeof(rd_msg_interference_rejection), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 	}
 	else return false;
 }
@@ -1381,7 +1381,7 @@ bool CRMControl::SetTargetExpansion(uint8_t value)
 	if(value >= 0 && value <= 2)
 	{
 		rd_msg_target_expansion[8] = value;
-		sendto(m_dataSocket, rd_msg_target_expansion, sizeof(rd_msg_target_expansion), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
+		sendto(m_dataSocket, (const char *)rd_msg_target_expansion, sizeof(rd_msg_target_expansion), 0, (struct sockaddr*)&m_radar_addr, sizeof(m_radar_addr));
 	}
 	else return false;
 }

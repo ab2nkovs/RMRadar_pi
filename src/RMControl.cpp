@@ -32,9 +32,10 @@
  */
 
 #include "RMControl.h"
-// #include <netinet/in.h>
-// #include <arpa/inet.h>
-
+#ifndef _WIN32
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
 PLUGIN_BEGIN_NAMESPACE
 
 #define SEATALK_HS_ANNOUNCE_GROUP	"224.0.0.1"

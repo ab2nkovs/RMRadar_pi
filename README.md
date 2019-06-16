@@ -26,7 +26,7 @@ git clone https://github.com/ab2nkovs/RMRadar_pi.git
 
 ###Build on Microsoft Windows
 
--- not tested, probably will not work
+-- Tested, does compile.
 
 ```
 mkdir BR24radar_pi/build-win32

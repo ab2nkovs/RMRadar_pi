@@ -184,7 +184,7 @@ SOCKET startUDPMulticastReceiveSocket(struct sockaddr_in *addr, UINT16 port, con
     goto fail;
   }
 
-  if (bind(rx_socket, (struct sockaddr *)&adr, sizeof(adr))) {
+  if (::bind(rx_socket, (struct sockaddr *)&adr, sizeof(adr))) {
     error_message << _("Cannot bind UDP socket to port ") << port;
     goto fail;
   }
@@ -228,7 +228,7 @@ SOCKET GetLocalhostServerTCPSocket() {
     return INVALID_SOCKET;
   }
 
-  if (bind(server, (struct sockaddr *)&adr, sizeof(adr))) {
+  if (::bind(server, (struct sockaddr *)&adr, sizeof(adr))) {
     wxLogError(wxT("BR24radar_pi: cannot bind socket to loopback address"));
     closesocket(server);
     return INVALID_SOCKET;
